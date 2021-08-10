@@ -1,12 +1,17 @@
 <idea-plugin>
     <id>com.k.pmpstudy.RenameFilesRefactorBatch</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <name>Rename Files Refactor Batch</name>
+    <vendor url="http://www.yourcompany.com">RenameFilesRefactorBatch</vendor>
 
     <description><![CDATA[
     Enter short description for your plugin here.<br>
     <em>most HTML tags may be used</em>
     ]]></description>
+
+    <change-notes><![CDATA[
+      Initial release.<br>
+    ]]>
+    </change-notes>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
@@ -18,5 +23,9 @@
 
     <actions>
         <!-- Add your actions here -->
+        <action id="com.k.pmpstudy.RenameFilesRefactorBatchAction" class="com.k.pmpstudy.RenameFilesRefactorBatchAction"
+                text="Rename Files...">
+            <add-to-group group-id="RefactoringMenu" anchor="after" relative-to-action="RefactoringMenuRenameFile"/>
+        </action>
     </actions>
 </idea-plugin>

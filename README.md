@@ -1,0 +1,4 @@
+# RenameFilesRefactorBatch-intellij
+
+IntelliJ標準のリファクタ機能を使用しながら、プロジェクトペインで選択したディレクトリ内のファイル名を一括置換します。
+
