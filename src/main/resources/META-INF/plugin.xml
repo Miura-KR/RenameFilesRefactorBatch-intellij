@@ -24,7 +24,7 @@
     <actions>
         <!-- Add your actions here -->
         <action id="com.k.pmpstudy.RenameFilesRefactorBatchAction" class="com.k.pmpstudy.RenameFilesRefactorBatchAction"
-                text="Rename Files...">
+                text="Rename in Files...">
             <add-to-group group-id="RefactoringMenu" anchor="after" relative-to-action="RefactoringMenuRenameFile"/>
         </action>
     </actions>
