@@ -21,7 +21,9 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version = '2021.2'
-    plugins = ['com.intellij.java']
+    plugins = ['com.intellij.java',
+               'org.intellij.groovy',
+               'org.jetbrains.kotlin']
 }
 patchPluginXml {
     changeNotes = """
