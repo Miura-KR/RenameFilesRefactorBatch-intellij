@@ -31,26 +31,32 @@ class RenameFilesRefactorBatchAction : AnAction() {
         val project = e.project
         refactoringFactory = RefactoringFactory.getInstance(project)
 
-        val directoryPsi: PsiElement = e.getData(CommonDataKeys.PSI_ELEMENT)!!
-        renameFilesRefactor(directoryPsi)
-    }
+        // 検索語、置換語の取得
+        val replaceWord: ReplaceWord? = ReplaceWordDialog().showInputReplaceWordsDialog()
 
-    private fun inputReplaceWord(): Map<String, String> {
-        return mapOf("search" to "word1", "replace" to "word2")
+        // ディレクトリ下のファイルで検索語を含むファイルリストの取得
+
+        // ファイルリストの一覧表示
+
+        // 1ファイルずつ確認をとりながらリネーム実行
+
+        val directoryPsi: PsiElement = e.getData(CommonDataKeys.PSI_ELEMENT)!!
+//        renameFilesRefactor(directoryPsi)
     }
 
     private fun renameFilesRefactor(pathPsi: PsiElement) {
         if (pathPsi !is PsiFileSystemItem) return
         if (pathPsi.isDirectory) {
             pathPsi.children.forEach { renameFilesRefactor(it) }
+            return
         }
-        if (pathPsi is PsiClassOwner) {
-            val classes: Array<PsiClass> = pathPsi.classes
-            if (classes.size == 1) {
-                val name: String = classes[0].name.toString()
-                refactoringFactory.createRename(classes[0], name + "new").run()
-            }
-        }
+        if (pathPsi !is PsiClassOwner) return
+
+        val classes: Array<PsiClass> = pathPsi.classes
+        if (classes.size != 1) return
+
+        val name: String = classes[0].name.toString()
+        refactoringFactory.createRename(classes[0], name + "new").run()
     }
 
     private fun showTestMessage(test: String = "Test") {
