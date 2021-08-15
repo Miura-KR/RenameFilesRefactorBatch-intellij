@@ -16,17 +16,24 @@ class ReplaceWordDialog : DialogWrapper(true) {
     override fun createCenterPanel(): JComponent = panel {
         row("Input replace words.") {}
         row("Search word") {
-            textField(::searchWord, { searchWord = it }).focused()
+            textField(::searchWord, { searchWord = it })
+                .focused()
+                .withValidationOnApply {
+                    if (it.text.isEmpty()) error("Need a search word.")
+                    else if (it.text.indexOf(' ') != -1) error("Can't use spaces.")
+                    else null
+                }
         }
         row("Replace word") {
             textField(::replaceWord, { replaceWord = it })
+                .withValidationOnApply {
+                    if (it.text.indexOf(' ') != -1) error("Can't use spaces.")
+                    else null
+                }
         }
     }
 
-    fun showInputReplaceWordsDialog(): ReplaceWord? {
-        if (showAndGet()) {
-            return ReplaceWord(searchWord, replaceWord)
-        }
-        return null
-    }
+    fun showInputReplaceWordsDialog(): ReplaceWord? =
+        if (showAndGet()) ReplaceWord(searchWord, replaceWord)
+        else null
 }
