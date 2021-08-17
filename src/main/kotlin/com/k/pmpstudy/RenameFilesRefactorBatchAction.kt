@@ -4,16 +4,12 @@ import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiClassOwner
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFileSystemItem
+import com.intellij.psi.*
 import com.intellij.refactoring.RefactoringFactory
 
 class RenameFilesRefactorBatchAction : AnAction() {
-    private lateinit var refactoringFactory: RefactoringFactory
 
     override fun update(e: AnActionEvent) {
         e.presentation.isEnabledAndVisible = isOnDirectoryInProjectView(e)
@@ -28,38 +24,45 @@ class RenameFilesRefactorBatchAction : AnAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        val project = e.project
-        refactoringFactory = RefactoringFactory.getInstance(project)
+        val selectedFile: VirtualFile? = e.getData(CommonDataKeys.VIRTUAL_FILE)
+        val refactoringFactory = RefactoringFactory.getInstance(e.project)
 
         // 検索語、置換語の取得
-        val replaceWord: ReplaceWord? = ReplaceWordDialog().showInputReplaceWordsDialog()
+        val replaceWord: ReplaceWord = ReplaceWordDialog().showInputReplaceWordsDialog() ?: return
 
         // ディレクトリ下のファイルで検索語を含むファイルリストの取得
+        val targetDir: PsiElement = e.getData(CommonDataKeys.PSI_ELEMENT) ?: return
+        val targetFiles: List<PsiFile> = getTargetFiles(targetDir, replaceWord.search)
 
-        // ファイルリストの一覧表示
-
-        // 1ファイルずつ確認をとりながらリネーム実行
-
-        val directoryPsi: PsiElement = e.getData(CommonDataKeys.PSI_ELEMENT)!!
-//        renameFilesRefactor(directoryPsi)
+        // 件数表示と現状の保存を促す
+        if (RenameConfirmDialog(targetFiles.size).showAndGet()) {
+            targetFiles.forEach { renameFileRefactor(refactoringFactory, it, replaceWord) }
+        }
     }
 
-    private fun renameFilesRefactor(pathPsi: PsiElement) {
-        if (pathPsi !is PsiFileSystemItem) return
+    private fun getTargetFiles(pathPsi: PsiElement, search: String): MutableList<PsiFile> {
+        val files: MutableList<PsiFile> = mutableListOf()
+        if (pathPsi !is PsiFileSystemItem) return files
         if (pathPsi.isDirectory) {
-            pathPsi.children.forEach { renameFilesRefactor(it) }
-            return
+            files.addAll(pathPsi.children.flatMap { getTargetFiles(it, search) })
+        } else if ((pathPsi is PsiFile) && pathPsi.name.contains(search)) {
+            files.add(pathPsi)
         }
+        return files
+    }
+
+    private fun renameFileRefactor(
+        refactoringFactory: RefactoringFactory,
+        pathPsi: PsiElement,
+        replaceWord: ReplaceWord
+    ) {
         if (pathPsi !is PsiClassOwner) return
 
         val classes: Array<PsiClass> = pathPsi.classes
         if (classes.size != 1) return
 
         val name: String = classes[0].name.toString()
-        refactoringFactory.createRename(classes[0], name + "new").run()
-    }
-
-    private fun showTestMessage(test: String = "Test") {
-        Messages.showMessageDialog(test, "Title", Messages.getInformationIcon())
+        val newName: String = name.replace(replaceWord.search, replaceWord.replace)
+        refactoringFactory.createRename(classes[0], newName).run()
     }
 }
