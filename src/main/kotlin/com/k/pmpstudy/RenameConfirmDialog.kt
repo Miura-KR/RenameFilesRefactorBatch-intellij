@@ -13,6 +13,6 @@ class RenameConfirmDialog(private val targetFilesSize: Int) : DialogWrapper(true
 
     override fun createCenterPanel(): JComponent = panel {
         row("$targetFilesSize Files found.") {}
-        row("This refactoring will change a lot of files.") {}
+        row("This refactoring may change a lot of files.") {}
     }
 }

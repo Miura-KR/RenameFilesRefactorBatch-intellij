@@ -4,7 +4,6 @@ import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.refactoring.RefactoringFactory
@@ -24,18 +23,18 @@ class RenameFilesRefactorBatchAction : AnAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        val selectedFile: VirtualFile? = e.getData(CommonDataKeys.VIRTUAL_FILE)
-        val refactoringFactory = RefactoringFactory.getInstance(e.project)
+        val targetDir: PsiElement = e.getData(CommonDataKeys.PSI_ELEMENT) ?: return
 
         // 検索語、置換語の取得
-        val replaceWord: ReplaceWord = ReplaceWordDialog().showInputReplaceWordsDialog() ?: return
+        val replaceWord: ReplaceWord =
+            ReplaceWordDialog(targetDir as PsiDirectory).showInputReplaceWordsDialog() ?: return
 
         // ディレクトリ下のファイルで検索語を含むファイルリストの取得
-        val targetDir: PsiElement = e.getData(CommonDataKeys.PSI_ELEMENT) ?: return
         val targetFiles: List<PsiFile> = getTargetFiles(targetDir, replaceWord.search)
-
         // 件数表示と現状の保存を促す
         if (RenameConfirmDialog(targetFiles.size).showAndGet()) {
+            // リネーム実行
+            val refactoringFactory = RefactoringFactory.getInstance(e.project)
             targetFiles.forEach { renameFileRefactor(refactoringFactory, it, replaceWord) }
         }
     }
@@ -53,11 +52,18 @@ class RenameFilesRefactorBatchAction : AnAction() {
 
     private fun renameFileRefactor(
         refactoringFactory: RefactoringFactory,
-        pathPsi: PsiElement,
+        pathPsi: PsiFile,
         replaceWord: ReplaceWord
     ) {
-        if (pathPsi !is PsiClassOwner) return
+        // クラスが書いてなければファイル名だけのリネーム
+        if (pathPsi !is PsiClassOwner) {
+            val name: String = pathPsi.virtualFile.name
+            val newName: String = name.replace(replaceWord.search, replaceWord.replace)
+            refactoringFactory.createRename(pathPsi, newName).run()
+            return
+        }
 
+        // クラスがあればクラスリネーム
         val classes: Array<PsiClass> = pathPsi.classes
         if (classes.size != 1) return
 
