@@ -1,4 +1,4 @@
-package com.k.pmpstudy
+package com.k.pmpstudy.dialog
 
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.layout.panel
@@ -12,7 +12,7 @@ class RenameConfirmDialog(private val targetFilesSize: Int) : DialogWrapper(true
     }
 
     override fun createCenterPanel(): JComponent = panel {
-        row("$targetFilesSize Files found.") {}
+        row("$targetFilesSize files found.") {}
         row("This refactoring may change a lot of files.") {}
     }
 }

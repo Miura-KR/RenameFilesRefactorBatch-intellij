@@ -7,6 +7,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.refactoring.RefactoringFactory
+import com.k.pmpstudy.dialog.RenameConfirmDialog
+import com.k.pmpstudy.dialog.ReplaceWordDialog
 
 class RenameFilesRefactorBatchAction : AnAction() {
 
