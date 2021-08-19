@@ -34,7 +34,7 @@ class RenameFilesRefactorBatchAction : AnAction() {
         // ディレクトリ下のファイルで検索語を含むファイルリストの取得
         val targetFiles: List<PsiFile> = getTargetFiles(targetDir, replaceWord.search)
         // 件数表示と現状の保存を促す
-        if (RenameConfirmDialog(targetFiles.size).showAndGet()) {
+        if (RenameConfirmDialog(targetDir, replaceWord, targetFiles.size).showAndGet()) {
             // リネーム実行
             val refactoringFactory = RefactoringFactory.getInstance(e.project)
             targetFiles.forEach { renameFileRefactor(refactoringFactory, it, replaceWord) }
@@ -57,20 +57,18 @@ class RenameFilesRefactorBatchAction : AnAction() {
         pathPsi: PsiFile,
         replaceWord: ReplaceWord
     ) {
-        // クラスが書いてなければファイル名だけのリネーム
-        if (pathPsi !is PsiClassOwner) {
-            val name: String = pathPsi.virtualFile.name
-            val newName: String = name.replace(replaceWord.search, replaceWord.replace)
+        var name: String = pathPsi.virtualFile.name
+        var newName: String = name.replace(replaceWord.search, replaceWord.replace)
+
+        // クラスが書いてない、または複数クラスが書いてあればファイル名だけのリネーム
+        if (pathPsi !is PsiClassOwner || pathPsi.classes.size != 1) {
             refactoringFactory.createRename(pathPsi, newName).run()
             return
         }
 
-        // クラスがあればクラスリネーム
         val classes: Array<PsiClass> = pathPsi.classes
-        if (classes.size != 1) return
-
-        val name: String = classes[0].name.toString()
-        val newName: String = name.replace(replaceWord.search, replaceWord.replace)
+        name = classes[0].name.toString()
+        newName = name.replace(replaceWord.search, replaceWord.replace)
         refactoringFactory.createRename(classes[0], newName).run()
     }
 }

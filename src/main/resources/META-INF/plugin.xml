@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.k.pmpstudy.RenameFilesRefactorBatch</id>
     <name>Rename Files Refactor Batch</name>
-    <vendor url="http://www.yourcompany.com">RenameFilesRefactorBatch</vendor>
+    <vendor url="https://github.com/Miura-KR/RenameFilesRefactorBatch-intellij">RenameFilesRefactorBatch</vendor>
 
     <description><![CDATA[
     Enter short description for your plugin here.<br>
@@ -17,8 +17,6 @@
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
-    <depends>org.intellij.groovy</depends>
-    <depends>org.jetbrains.kotlin</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
