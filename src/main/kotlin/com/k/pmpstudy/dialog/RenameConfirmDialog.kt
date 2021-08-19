@@ -4,6 +4,7 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.psi.PsiDirectory
 import com.intellij.ui.layout.panel
 import com.k.pmpstudy.ReplaceWord
+import java.awt.Dimension
 import javax.swing.GroupLayout
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -34,23 +35,27 @@ class RenameConfirmDialog(
         val layout = GroupLayout(dialogPanel)
         layout.autoCreateGaps = true
         layout.autoCreateContainerGaps = true
+
         layout.setHorizontalGroup(
-            layout.createSequentialGroup()
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(
-                    layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(dirLabel)
-                        .addComponent(searchLabel)
-                        .addComponent(replaceLabel)
-                        .addComponent(fileSizeLabel)
+                    layout.createSequentialGroup()
+                        .addGroup(
+                            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(dirLabel)
+                                .addComponent(searchLabel)
+                                .addComponent(replaceLabel)
+                                .addComponent(fileSizeLabel)
+                        )
+                        .addGroup(
+                            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(dirPath)
+                                .addComponent(search)
+                                .addComponent(replace)
+                                .addComponent(fileSize)
+                        )
                 )
-                .addGroup(
-                    layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(dirPath)
-                        .addComponent(search)
-                        .addComponent(replace)
-                        .addComponent(fileSize)
-                )
-                .addComponent(confirm)
+                .addComponent(confirm, GroupLayout.PREFERRED_SIZE, 500, 500)
         )
         layout.setVerticalGroup(
             layout.createSequentialGroup()
@@ -74,10 +79,9 @@ class RenameConfirmDialog(
                         .addComponent(fileSizeLabel)
                         .addComponent(fileSize)
                 )
-                .addComponent(confirm)
+                .addComponent(confirm, GroupLayout.PREFERRED_SIZE, 50, 100)
         )
         dialogPanel.layout = layout
-
         return dialogPanel
     }
 }
