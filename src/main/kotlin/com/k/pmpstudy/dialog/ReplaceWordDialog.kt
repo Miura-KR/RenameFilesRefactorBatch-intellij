@@ -3,7 +3,7 @@ package com.k.pmpstudy.dialog
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.psi.PsiDirectory
 import com.intellij.ui.layout.panel
-import com.k.pmpstudy.ReplaceWord
+import com.k.pmpstudy.domain.ReplaceWord
 import javax.swing.JComponent
 
 class ReplaceWordDialog(private val targetDir: PsiDirectory) : DialogWrapper(true) {

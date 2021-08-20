@@ -9,6 +9,7 @@ import com.intellij.psi.*
 import com.intellij.refactoring.RefactoringFactory
 import com.k.pmpstudy.dialog.RenameConfirmDialog
 import com.k.pmpstudy.dialog.ReplaceWordDialog
+import com.k.pmpstudy.domain.ReplaceWord
 
 class RenameFilesRefactorBatchAction : AnAction() {
 
