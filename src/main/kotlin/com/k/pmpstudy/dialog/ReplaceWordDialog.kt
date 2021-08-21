@@ -22,7 +22,7 @@ class ReplaceWordDialog(private val targetDir: PsiDirectory) : DialogWrapper(tru
             textField(::searchWord, { searchWord = it })
                 .focused()
                 .withValidationOnApply {
-                    if (it.text.isEmpty()) error("Need a search word.")
+                    if (it.text.isEmpty()) error("Specify the search word.")
                     else null
                 }
         }

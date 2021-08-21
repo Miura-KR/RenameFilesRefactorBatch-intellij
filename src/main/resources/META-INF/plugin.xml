@@ -4,9 +4,10 @@
     <vendor url="https://github.com/Miura-KR/RenameFilesRefactorBatch-intellij">RenameFilesRefactorBatch</vendor>
 
     <description><![CDATA[
-    This is an IntelliJ IDEA plugin that adds an action to batch replace the names of files in a directory selected in the project view.</br>
-The renaming uses the standard IntelliJ refactor function, so if the source file is in an object-oriented language, it will automatically replace the corresponding class name, etc. in the source code.</br>
-Operation confirmed at Java source files.</br>
+    This is an IntelliJ-based plugin that adds an action to batch replace the names of files in a directory selected in the project view.</br>
+The renaming uses the standard IntelliJ refactor function, so if the source file is in an object-oriented language,
+it will automatically replace the corresponding class name, etc. in the source code.</br>
+Operation confirmed at Java source files.
 
 <h2>How to run</h2>
 
@@ -21,11 +22,14 @@ Right-click on the directory in the Project View > <code>Refactor</code> > <code
 <li>If more than one class is written in one source file, only the file name will be renamed.</li>
 </ul>
 
+
+</br>
 <hr>
+</br>
 
 プロジェクトビューで選択したディレクトリ内のファイルの名前を一括置換するアクションを追加するIntelliJ IDEAプラグインです。</br>
 名前変更にはIntelliJ標準のリファクタ機能を使用しているので、オブジェクト指向言語のソースファイルならソースコード上の対応するクラス名なども自動で置換してくれます。</br>
-Javaのソースファイルで動作確認済みです。</br>
+Javaのソースファイルで動作確認済みです。
 
 <h2>仕様</h2>
 

@@ -1,6 +1,6 @@
 # RenameFilesRefactorBatch-intellij
 
-This is an IntelliJ IDEA plugin that adds an action to batch replace the names of files in a directory selected in the project view.
+This is an IntelliJ-based plugin that adds an action to batch replace the names of files in a directory selected in the project view.
 
 The renaming uses the standard IntelliJ refactor function, so if the source file is in an object-oriented language, it will automatically replace the corresponding class name, etc. in the source code.
 

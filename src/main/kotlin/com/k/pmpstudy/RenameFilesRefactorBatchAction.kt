@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.refactoring.RefactoringFactory
@@ -34,6 +35,15 @@ class RenameFilesRefactorBatchAction : AnAction() {
 
         // ディレクトリ下のファイルで検索語を含むファイルリストの取得
         val targetFiles: List<PsiFile> = getTargetFiles(targetDir, replaceWord.search)
+        if (targetFiles.isEmpty()) {
+            Messages.showMessageDialog(
+                "File not found",
+                "Search word : ${replaceWord.search}",
+                Messages.getInformationIcon()
+            )
+            return
+        }
+
         // 件数表示と現状の保存を促す
         if (RenameConfirmDialog(targetDir, replaceWord, targetFiles.size).showAndGet()) {
             // リネーム実行

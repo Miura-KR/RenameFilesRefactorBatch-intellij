@@ -29,7 +29,7 @@ class RenameConfirmDialog(
         val replace = JLabel(replaceWord.replace)
         val fileSizeLabel = JLabel("Found files count")
         val fileSize = JLabel("$targetFilesSize")
-        val confirm = JLabel("This refactoring may change a lot of files.")
+        val confirm = JLabel("This refactoring will probably change a lot of files.")
         val layout = GroupLayout(dialogPanel)
         layout.autoCreateGaps = true
         layout.autoCreateContainerGaps = true
