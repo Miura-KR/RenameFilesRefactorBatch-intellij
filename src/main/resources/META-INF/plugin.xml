@@ -20,8 +20,8 @@ Right-click on the directory in the Project View > <code>Refactor</code> > <code
 <li>Files in subdirectories are also searchable.</li>
 <li>Multiple selection of search directories is not supported.</li>
 <li>If more than one class is written in one source file, only the file name will be renamed.</li>
+<li>If the class name written in the source code is different from the file name, only the file name will be renamed.</li>
 </ul>
-
 
 </br>
 <hr>
@@ -37,7 +37,8 @@ Javaのソースファイルで動作確認済みです。
 <li>ディレクトリ名は変更しない</li>
 <li>サブディレクトリ内のファイルも検索範囲とする</li>
 <li>検索ディレクトリの複数選択は非対応</li>
-<li>１つのソースファイルに2つ以上のクラスが書かれているファイルはファイル名だけのリネームが行われる</li>
+<li>１つのソースファイルに2つ以上のクラスが書かれているファイルは、ファイル名だけのリネームが行われる</li>
+<li>ソースファイルに書いてあるクラス名とファイル名が異なる場合は、ファイル名だけのリネームが行われる</li>
 </ul>
 
 <h2>実行方法</h2>
@@ -46,7 +47,7 @@ Javaのソースファイルで動作確認済みです。
     ]]></description>
 
     <change-notes><![CDATA[
-      Initial release.<br>
+      Fix specification.<br>
     ]]>
     </change-notes>
 

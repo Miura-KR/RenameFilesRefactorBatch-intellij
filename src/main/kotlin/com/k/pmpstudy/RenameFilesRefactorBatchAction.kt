@@ -71,15 +71,19 @@ class RenameFilesRefactorBatchAction : AnAction() {
         var name: String = pathPsi.virtualFile.name
         var newName: String = name.replace(replaceWord.search, replaceWord.replace)
 
-        // クラスが書いてない、または複数クラスが書いてあればファイル名だけのリネーム
-        if (pathPsi !is PsiClassOwner || pathPsi.classes.size != 1) {
-            refactoringFactory.createRename(pathPsi, newName).run()
+        if (isToRenameClassName(pathPsi, name)) {
+            val classes: Array<PsiClass> = (pathPsi as PsiClassOwner).classes
+            name = classes[0].name.toString()
+            newName = name.replace(replaceWord.search, replaceWord.replace)
+            refactoringFactory.createRename(classes[0], newName).run()
             return
         }
 
-        val classes: Array<PsiClass> = pathPsi.classes
-        name = classes[0].name.toString()
-        newName = name.replace(replaceWord.search, replaceWord.replace)
-        refactoringFactory.createRename(classes[0], newName).run()
+        refactoringFactory.createRename(pathPsi, newName).run()
     }
+
+    private fun isToRenameClassName(pathPsi: PsiFile, name: String): Boolean =
+        pathPsi is PsiClassOwner // クラスが書いてある
+                && pathPsi.classes.size == 1  // クラスが1つだけ書いてある
+                && name.split(".").dropLast(1).joinToString() == pathPsi.classes[0].name  // クラス名とファイル名が一致
 }
