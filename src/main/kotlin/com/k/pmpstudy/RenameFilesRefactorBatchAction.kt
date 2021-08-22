@@ -5,7 +5,6 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.ui.Messages
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.refactoring.RefactoringFactory
 import com.k.pmpstudy.dialog.RenameConfirmDialog
@@ -18,13 +17,9 @@ class RenameFilesRefactorBatchAction : AnAction() {
         e.presentation.isEnabledAndVisible = isOnDirectoryInProjectView(e)
     }
 
-    private fun isOnDirectoryInProjectView(e: AnActionEvent): Boolean {
-        if (e.place == ActionPlaces.PROJECT_VIEW_POPUP) {
-            val selectedFile: VirtualFile? = e.getData(CommonDataKeys.VIRTUAL_FILE)
-            return (selectedFile != null) && selectedFile.isDirectory
-        }
-        return false
-    }
+    private fun isOnDirectoryInProjectView(e: AnActionEvent): Boolean =
+        (e.place == ActionPlaces.PROJECT_VIEW_POPUP)
+                && (e.getData(CommonDataKeys.VIRTUAL_FILE)?.isDirectory ?: false)
 
     override fun actionPerformed(e: AnActionEvent) {
         val targetDir: PsiElement = e.getData(CommonDataKeys.PSI_ELEMENT) ?: return
@@ -52,16 +47,15 @@ class RenameFilesRefactorBatchAction : AnAction() {
         }
     }
 
-    private fun getTargetFiles(pathPsi: PsiElement, search: String): MutableList<PsiFile> {
-        val files: MutableList<PsiFile> = mutableListOf()
-        if (pathPsi !is PsiFileSystemItem) return files
-        if (pathPsi.isDirectory) {
-            files.addAll(pathPsi.children.flatMap { getTargetFiles(it, search) })
-        } else if ((pathPsi is PsiFile) && pathPsi.name.contains(search)) {
-            files.add(pathPsi)
-        }
-        return files
-    }
+    private fun getTargetFiles(pathPsi: PsiElement, search: String): List<PsiFile> =
+        if (pathPsi !is PsiFileSystemItem)
+            listOf()
+        else if (pathPsi.isDirectory)
+            pathPsi.children.flatMap { getTargetFiles(it, search) }
+        else if ((pathPsi is PsiFile) && pathPsi.name.contains(search))
+            listOf(pathPsi)
+        else
+            listOf()
 
     private fun renameFileRefactor(
         refactoringFactory: RefactoringFactory,
@@ -82,8 +76,8 @@ class RenameFilesRefactorBatchAction : AnAction() {
         refactoringFactory.createRename(pathPsi, newName).run()
     }
 
-    private fun isToRenameClassName(pathPsi: PsiFile, name: String): Boolean =
-        pathPsi is PsiClassOwner // クラスが書いてある
-                && pathPsi.classes.size == 1  // クラスが1つだけ書いてある
-                && name.split(".").dropLast(1).joinToString() == pathPsi.classes[0].name  // クラス名とファイル名が一致
+    private fun isToRenameClassName(pathPsi: PsiFile, fileName: String): Boolean =
+        pathPsi is PsiClassOwner
+                && pathPsi.classes.size == 1
+                && fileName.split(".").dropLast(1).joinToString() == pathPsi.classes[0].name  // クラス名とファイル名が一致
 }
