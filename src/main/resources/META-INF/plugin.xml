@@ -47,9 +47,10 @@ Javaのソースファイルで動作確認済みです。
     ]]></description>
 
     <change-notes><![CDATA[
-      Fix specification.<br>
+      update IDE version.<br>
     ]]>
     </change-notes>
+    <idea-version since-build="201"/>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
