@@ -2,7 +2,8 @@ package com.k.pmpstudy.dialog
 
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.psi.PsiDirectory
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import com.k.pmpstudy.domain.ReplaceWord
 import javax.swing.JComponent
 
@@ -19,15 +20,16 @@ class ReplaceWordDialog(private val targetDir: PsiDirectory) : DialogWrapper(tru
         row("TargetDirectory : ${targetDir.virtualFile.path}") {}
         row("Please input replace words.") {}
         row("Search word") {
-            textField(::searchWord, { searchWord = it })
+            textField()
+                .bindText(::searchWord) { searchWord = it }
                 .focused()
-                .withValidationOnApply {
+                .validationOnApply {
                     if (it.text.isEmpty()) error("Specify the search word.")
                     else null
                 }
         }
         row("Replace word") {
-            textField(::replaceWord, { replaceWord = it })
+            textField().bindText(::replaceWord) { replaceWord = it }
         }
     }
 
