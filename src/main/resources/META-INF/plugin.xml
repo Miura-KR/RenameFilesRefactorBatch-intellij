@@ -47,8 +47,8 @@ Javaのソースファイルで動作確認済みです。
     ]]></description>
 
     <change-notes><![CDATA[
-    1.0.4<br>
-    Update until version to 221 idea.
+    1.0.5<br>
+    Update until version to 222 idea.
     ]]>
     </change-notes>
     <idea-version since-build="201"/>
