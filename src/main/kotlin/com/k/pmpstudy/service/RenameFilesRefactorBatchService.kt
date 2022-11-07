@@ -4,6 +4,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.psi.*
 import com.intellij.refactoring.RefactoringFactory
+import com.intellij.refactoring.rename.PsiElementRenameHandler
+import com.intellij.refactoring.rename.RenameDialog
+import com.intellij.refactoring.rename.RenamePsiElementProcessorBase
+import com.intellij.refactoring.rename.RenameRefactoringDialog
 import com.k.pmpstudy.dialog.RenameConfirmDialog
 import com.k.pmpstudy.dialog.ReplaceWordDialog
 import com.k.pmpstudy.domain.ReplaceWord
@@ -59,11 +63,29 @@ class RenameFilesRefactorBatchService(private val project: Project) {
             return
         }
 
-        refactoringFactory.createRename(pathPsi, newName).run()
+        renameNonClassFile(pathPsi, newName)
     }
 
     private fun isToRenameClassName(pathPsi: PsiFile, fileName: String): Boolean =
         pathPsi is PsiClassOwner
                 && pathPsi.classes.size == 1
                 && fileName.split(".").dropLast(1).joinToString() == pathPsi.classes[0].name  // クラス名とファイル名が一致
+
+    private fun renameNonClassFile(pathPsi: PsiFile, newName: String) {
+        val processor: RenamePsiElementProcessorBase = RenamePsiElementProcessorBase.forPsiElement(pathPsi)
+        val substitute: PsiElement? = processor.substituteElementToRename(pathPsi, null)
+
+        if (substitute == null || !PsiElementRenameHandler.canRename(project, null, substitute)) return
+
+        val dialog: RenameRefactoringDialog? = processor.createDialog(project, substitute, pathPsi, null)
+
+        if (dialog is RenameDialog) {
+            dialog.setPreviewResults(false)
+            try {
+                dialog.performRename(newName)
+            } finally {
+                dialog.close()
+            }
+        }
+    }
 }

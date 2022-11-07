@@ -1,9 +1,6 @@
 package com.k.pmpstudy
 
-import com.intellij.openapi.actionSystem.ActionPlaces
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.*
 import com.intellij.psi.PsiElement
 import com.k.pmpstudy.service.RenameFilesRefactorBatchService
 
@@ -22,4 +19,6 @@ class RenameFilesRefactorBatchAction : AnAction() {
 
         e.project?.let { RenameFilesRefactorBatchService(it).run(targetDir) }
     }
+
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
 }

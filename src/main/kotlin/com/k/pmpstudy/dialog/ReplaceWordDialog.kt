@@ -19,17 +19,19 @@ class ReplaceWordDialog(private val targetDir: PsiDirectory) : DialogWrapper(tru
     override fun createCenterPanel(): JComponent = panel {
         row("TargetDirectory : ${targetDir.virtualFile.path}") {}
         row("Please input replace words.") {}
-        row("Search word") {
-            textField()
-                .bindText(::searchWord) { searchWord = it }
-                .focused()
-                .validationOnApply {
-                    if (it.text.isEmpty()) error("Specify the search word.")
-                    else null
-                }
-        }
-        row("Replace word") {
-            textField().bindText(::replaceWord) { replaceWord = it }
+        group {
+            row("Search word") {
+                textField()
+                    .bindText(::searchWord) { searchWord = it }
+                    .focused()
+                    .validationOnApply {
+                        if (it.text.isEmpty()) error("Specify the search word.")
+                        else null
+                    }
+            }
+            row("Replace word") {
+                textField().bindText(::replaceWord) { replaceWord = it }
+            }
         }
     }
 

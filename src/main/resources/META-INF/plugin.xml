@@ -39,6 +39,7 @@ Javaのソースファイルで動作確認済みです。
 <li>検索ディレクトリの複数選択は非対応</li>
 <li>１つのソースファイルに2つ以上のクラスが書かれているファイルは、ファイル名だけのリネームが行われる</li>
 <li>ソースファイルに書いてあるクラス名とファイル名が異なる場合は、ファイル名だけのリネームが行われる</li>
+<li>クラス定義の無いファイルは、ファイル名だけのリネームが行われる</li>
 </ul>
 
 <h2>実行方法</h2>
@@ -47,16 +48,17 @@ Javaのソースファイルで動作確認済みです。
     ]]></description>
 
     <change-notes><![CDATA[
-    1.0.5<br>
-    Update until version to 222 idea.
+    1.0.6<br>
+    changed renaming API.<br>
+    fix Dialog.
     ]]>
     </change-notes>
-    <idea-version since-build="201"/>
+    <idea-version since-build="222.2964.55"/>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
