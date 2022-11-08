@@ -47,7 +47,8 @@ Javaのソースファイルで動作確認済みです。
     ]]></description>
 
     <change-notes><![CDATA[
-      Fix specification.<br>
+      1.0.2.2<br>
+      bug fix.
     ]]>
     </change-notes>
 
