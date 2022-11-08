@@ -48,9 +48,9 @@ Javaのソースファイルで動作確認済みです。
     ]]></description>
 
     <change-notes><![CDATA[
-    1.0.6<br>
+    1.0.7<br>
     changed renaming API.<br>
-    fix Dialog.
+    bug fix.
     ]]>
     </change-notes>
     <idea-version since-build="222.2964.55"/>
