@@ -24,7 +24,7 @@ intellij {
     plugins = ['com.intellij.java']
 }
 patchPluginXml {
-    sinceBuild = '201.*'
+    sinceBuild = '201.8743'
     untilBuild = '212.*'
 }
 test {
