@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.k.pmpstudy'
-version '1.0.4'
+version '1.0.4.1'
 
 repositories {
     mavenCentral()
@@ -21,6 +21,9 @@ dependencies {
 intellij {
     version = '2022.1'
     plugins = ['com.intellij.java']
+}
+patchPluginXml {
+    sinceBuild = '213.7172'
 }
 test {
     useJUnitPlatform()

@@ -3,6 +3,7 @@ package com.k.pmpstudy.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.psi.*
+import com.intellij.psi.xml.XmlFile
 import com.intellij.refactoring.RefactoringFactory
 import com.k.pmpstudy.dialog.RenameConfirmDialog
 import com.k.pmpstudy.dialog.ReplaceWordDialog
@@ -48,17 +49,21 @@ class RenameFilesRefactorBatchService(private val project: Project) {
         pathPsi: PsiFile,
         replaceWord: ReplaceWord
     ) {
-        var name: String = pathPsi.virtualFile.name
-        var newName: String = name.replace(replaceWord.search, replaceWord.replace)
+        val name: String = pathPsi.virtualFile.name
 
         if (isToRenameClassName(pathPsi, name)) {
             val classes: Array<PsiClass> = (pathPsi as PsiClassOwner).classes
-            name = classes[0].name.toString()
-            newName = name.replace(replaceWord.search, replaceWord.replace)
-            refactoringFactory.createRename(classes[0], newName).run()
+            val className = classes[0].name.toString()
+            val newClassName = className.replace(replaceWord.search, replaceWord.replace)
+            refactoringFactory.createRename(classes[0], newClassName).run()
             return
         }
 
+        var newName: String = name.replace(replaceWord.search, replaceWord.replace)
+
+        if (pathPsi is XmlFile || pathPsi is PsiBinaryFile) {
+            newName = newName.split(".").dropLast(1).joinToString()
+        }
         refactoringFactory.createRename(pathPsi, newName).run()
     }
 

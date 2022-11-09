@@ -47,11 +47,9 @@ Javaのソースファイルで動作確認済みです。
     ]]></description>
 
     <change-notes><![CDATA[
-    1.0.4<br>
-    Update until version to 221 idea.
+    bug fix
     ]]>
     </change-notes>
-    <idea-version since-build="201"/>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
