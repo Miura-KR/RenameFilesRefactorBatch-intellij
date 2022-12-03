@@ -48,12 +48,10 @@ Javaのソースファイルで動作確認済みです。
     ]]></description>
 
     <change-notes><![CDATA[
-    1.0.7<br>
-    changed renaming API.<br>
-    bug fix.
+    1.0.8<br>
+    fix version compatibility.<br>
     ]]>
     </change-notes>
-    <idea-version since-build="222.2964.55"/>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
