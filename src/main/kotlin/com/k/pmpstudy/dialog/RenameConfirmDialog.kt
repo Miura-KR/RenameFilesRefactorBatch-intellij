@@ -24,6 +24,14 @@ class RenameConfirmDialog(
             label(targetDir.virtualFile.path)
         }.layout(RowLayout.PARENT_GRID)
         row {
+            label("Use refactor rename")
+            label(if (replaceWord.isRegex) "Yes" else "No")
+        }.layout(RowLayout.PARENT_GRID)
+        row {
+            label("Use regular expression")
+            label(if (replaceWord.isRegex) "Yes" else "No")
+        }.layout(RowLayout.PARENT_GRID)
+        row {
             label("Search word")
             label(replaceWord.search)
         }.layout(RowLayout.PARENT_GRID)
