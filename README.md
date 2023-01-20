@@ -8,7 +8,7 @@ Operation confirmed at Java source files.
 
 ## How to run
 
-Right-click on the directory in the Project View > `Refactor` > `Rename in Files...`
+Right-click on the directory in the Project View > `Refactor` > `Bulk Rename`
 
 ## Specification
 
@@ -36,5 +36,5 @@ Javaのソースファイルで動作確認済みです。
 
 ## 実行方法
 
-プロジェクトビューでディレクトリを選択して右クリック > `Refactor` > `Rename in Files...`
+プロジェクトビューでディレクトリを選択して右クリック > `Refactor` > `Bulk Rename`
 

@@ -8,6 +8,8 @@ import com.intellij.refactoring.RefactoringFactory
 import com.k.pmpstudy.dialog.RenameConfirmDialog
 import com.k.pmpstudy.dialog.ReplaceWordDialog
 import com.k.pmpstudy.domain.ReplaceInfo
+import java.io.IOException
+import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -31,18 +33,30 @@ class RenameFilesRefactorBatchService(private val project: Project) {
         }
 
         // 件数表示と現状の保存を促す
-        if (RenameConfirmDialog(dir, replaceInfo, targetFiles.size).showAndGet()) {
-            if (replaceInfo.useRefactor) {
-                // リネーム実行
-                val refactoringFactory = RefactoringFactory.getInstance(project)
-                targetFiles.forEach { renameFileRefactor(refactoringFactory, it, replaceInfo) }
-                return
-            }
+        if (!RenameConfirmDialog(dir, replaceInfo, targetFiles.size).showAndGet()) {
+            return
+        }
 
-            targetFiles.forEach {
-                val srcFilePath = Path.of(it.virtualFile.path)
-                val newFileName = getNewName(replaceInfo, it.name)
+        if (replaceInfo.useRefactor) {
+            // リネーム実行
+            val refactoringFactory = RefactoringFactory.getInstance(project)
+            targetFiles.forEach { renameFileRefactor(refactoringFactory, it, replaceInfo) }
+            return
+        }
+
+        targetFiles.forEach {
+            val srcFilePath = Path.of(it.virtualFile.path)
+            val newFileName = getNewName(replaceInfo, it.name)
+            try {
                 Files.move(srcFilePath, srcFilePath.parent.resolve(newFileName))
+            } catch (e: FileAlreadyExistsException) {
+                Messages.showMessageDialog(
+                    "$newFileName is already exist.", "Rename Error", Messages.getInformationIcon()
+                )
+            } catch (e: IOException) {
+                Messages.showMessageDialog(
+                    "Rename ${it.name} to $newFileName.", "Rename Error", Messages.getInformationIcon()
+                )
             }
         }
     }

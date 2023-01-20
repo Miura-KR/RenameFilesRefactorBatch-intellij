@@ -11,11 +11,12 @@ Operation confirmed at Java source files.
 
 <h2>How to run</h2>
 
-Right-click on the directory in the Project View > <code>Refactor</code> > <code>Rename in Files...</code>
+Right-click on the directory in the Project View > <code>Refactor</code> > <code>Bulk Rename</code>
 
 <h2>Specification</h2>
 
 <ul>
+<li>Regular expression support</li>
 <li>Do not change the directory name.</li>
 <li>Files in subdirectories are also searchable.</li>
 <li>Multiple selection of search directories is not supported.</li>
@@ -34,6 +35,7 @@ Javaのソースファイルで動作確認済みです。
 <h2>仕様</h2>
 
 <ul>
+<li>正規表現対応</li>
 <li>ディレクトリ名は変更しない</li>
 <li>サブディレクトリ内のファイルも検索範囲とする</li>
 <li>検索ディレクトリの複数選択は非対応</li>
@@ -44,12 +46,12 @@ Javaのソースファイルで動作確認済みです。
 
 <h2>実行方法</h2>
 
-プロジェクトビューでディレクトリを選択して右クリック > <code>Refactor</code> > <code>Rename in Files...</code>
+プロジェクトビューでディレクトリを選択して右クリック > <code>Refactor</code> > <code>Bulk Rename</code>
     ]]></description>
 
     <change-notes><![CDATA[
-    1.0.8<br>
-    fix version compatibility.<br>
+    1.0.9<br>
+    Regular expression support<br>
     ]]>
     </change-notes>
 
@@ -65,7 +67,7 @@ Javaのソースファイルで動作確認済みです。
     <actions>
         <!-- Add your actions here -->
         <action id="com.k.pmpstudy.RenameFilesRefactorBatchAction" class="com.k.pmpstudy.RenameFilesRefactorBatchAction"
-                text="Rename in Files...">
+                text="Bulk Rename">
             <add-to-group group-id="RefactoringMenu" anchor="after" relative-to-action="RefactoringMenuRenameFile"/>
         </action>
     </actions>
