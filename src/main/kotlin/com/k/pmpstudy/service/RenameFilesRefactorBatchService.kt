@@ -7,32 +7,43 @@ import com.intellij.psi.xml.XmlFile
 import com.intellij.refactoring.RefactoringFactory
 import com.k.pmpstudy.dialog.RenameConfirmDialog
 import com.k.pmpstudy.dialog.ReplaceWordDialog
-import com.k.pmpstudy.domain.ReplaceWord
+import com.k.pmpstudy.domain.ReplaceInfo
+import java.nio.file.Files
+import java.nio.file.Path
 
 class RenameFilesRefactorBatchService(private val project: Project) {
     fun run(dir: PsiElement) {
         // 検索語、置換語の取得
-        val replaceWord: ReplaceWord =
+        val replaceInfo: ReplaceInfo =
             ReplaceWordDialog(dir as PsiDirectory).showInputReplaceWordsDialog() ?: return
 
         // ディレクトリ下のファイルで検索語を含むファイルリストの取得
         val targetFiles: List<PsiFile> =
-            if (replaceWord.isRegex) getTargetFilesRegex(dir, replaceWord.search)
-            else getTargetFiles(dir, replaceWord.search)
+            if (replaceInfo.isRegex) getTargetFilesRegex(dir, replaceInfo.search)
+            else getTargetFiles(dir, replaceInfo.search)
         if (targetFiles.isEmpty()) {
             Messages.showMessageDialog(
                 "File not found",
-                "Search word : ${replaceWord.search}",
+                "Search word : ${replaceInfo.search}",
                 Messages.getInformationIcon()
             )
             return
         }
 
         // 件数表示と現状の保存を促す
-        if (RenameConfirmDialog(dir, replaceWord, targetFiles.size).showAndGet()) {
-            // リネーム実行
-            val refactoringFactory = RefactoringFactory.getInstance(project)
-            targetFiles.forEach { renameFileRefactor(refactoringFactory, it, replaceWord) }
+        if (RenameConfirmDialog(dir, replaceInfo, targetFiles.size).showAndGet()) {
+            if (replaceInfo.useRefactor) {
+                // リネーム実行
+                val refactoringFactory = RefactoringFactory.getInstance(project)
+                targetFiles.forEach { renameFileRefactor(refactoringFactory, it, replaceInfo) }
+                return
+            }
+
+            targetFiles.forEach {
+                val srcFilePath = Path.of(it.virtualFile.path)
+                val newFileName = getNewName(replaceInfo, it.name)
+                Files.move(srcFilePath, srcFilePath.parent.resolve(newFileName))
+            }
         }
     }
 
@@ -59,19 +70,19 @@ class RenameFilesRefactorBatchService(private val project: Project) {
     private fun renameFileRefactor(
         refactoringFactory: RefactoringFactory,
         pathPsi: PsiFile,
-        replaceWord: ReplaceWord
+        replaceInfo: ReplaceInfo
     ) {
         val name: String = pathPsi.virtualFile.name
 
         if (isToRenameClassName(pathPsi, name)) {
             val classes: Array<PsiClass> = (pathPsi as PsiClassOwner).classes
             val className = classes[0].name.toString()
-            val newClassName = getNewName(replaceWord, className)
+            val newClassName = getNewName(replaceInfo, className)
             refactoringFactory.createRename(classes[0], newClassName).run()
             return
         }
 
-        var newName: String = getNewName(replaceWord, name)
+        var newName: String = getNewName(replaceInfo, name)
 
         if (pathPsi is XmlFile || pathPsi is PsiBinaryFile) {
             newName = newName.split(".").dropLast(1).joinToString()
@@ -84,7 +95,7 @@ class RenameFilesRefactorBatchService(private val project: Project) {
                 && pathPsi.classes.size == 1
                 && fileName.split(".").dropLast(1).joinToString() == pathPsi.classes[0].name  // クラス名とファイル名が一致
 
-    private fun getNewName(replaceWord: ReplaceWord, srcName: String): String =
-        if (replaceWord.isRegex) srcName.replace(Regex(replaceWord.search), replaceWord.replace)
-        else srcName.replace(replaceWord.search, replaceWord.replace)
+    private fun getNewName(replaceInfo: ReplaceInfo, srcName: String): String =
+        if (replaceInfo.isRegex) srcName.replace(Regex(replaceInfo.search), replaceInfo.replace)
+        else srcName.replace(replaceInfo.search, replaceInfo.replace)
 }

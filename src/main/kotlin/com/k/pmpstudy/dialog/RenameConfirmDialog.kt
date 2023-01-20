@@ -4,12 +4,12 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.psi.PsiDirectory
 import com.intellij.ui.dsl.builder.RowLayout
 import com.intellij.ui.dsl.builder.panel
-import com.k.pmpstudy.domain.ReplaceWord
+import com.k.pmpstudy.domain.ReplaceInfo
 import javax.swing.JComponent
 
 class RenameConfirmDialog(
     private val targetDir: PsiDirectory,
-    private val replaceWord: ReplaceWord,
+    private val replaceInfo: ReplaceInfo,
     private val targetFilesSize: Int
 ) : DialogWrapper(true) {
 
@@ -24,20 +24,20 @@ class RenameConfirmDialog(
             label(targetDir.virtualFile.path)
         }.layout(RowLayout.PARENT_GRID)
         row {
-            label("Use refactor rename")
-            label(if (replaceWord.isRegex) "Yes" else "No")
+            label("Use refactor")
+            label(if (replaceInfo.useRefactor) "Yes" else "No")
         }.layout(RowLayout.PARENT_GRID)
         row {
             label("Use regular expression")
-            label(if (replaceWord.isRegex) "Yes" else "No")
+            label(if (replaceInfo.isRegex) "Yes" else "No")
         }.layout(RowLayout.PARENT_GRID)
         row {
             label("Search word")
-            label(replaceWord.search)
+            label(replaceInfo.search)
         }.layout(RowLayout.PARENT_GRID)
         row {
             label("Replace word")
-            label(replaceWord.replace)
+            label(replaceInfo.replace)
         }.layout(RowLayout.PARENT_GRID)
         row {
             label("Found files count")
