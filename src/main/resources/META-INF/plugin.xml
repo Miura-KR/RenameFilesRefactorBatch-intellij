@@ -50,8 +50,8 @@ Javaのソースファイルで動作確認済みです。
     ]]></description>
 
     <change-notes><![CDATA[
-    1.0.9<br>
-    Regular expression support<br>
+    1.0.10<br>
+    Update until version to 231 idea.
     ]]>
     </change-notes>
 

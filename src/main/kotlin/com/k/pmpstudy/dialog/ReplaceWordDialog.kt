@@ -14,7 +14,6 @@ class ReplaceWordDialog(private val targetDir: PsiDirectory) : DialogWrapper(tru
     private var refactorCheck = true
     private lateinit var refactorCheckBox: Cell<JBCheckBox>
     private lateinit var regexCheckBox: Cell<JBCheckBox>
-    private val errorMsg = "Can't use dot character for rename refactor."
 
     init {
         title = "Rename Files..."
@@ -29,20 +28,18 @@ class ReplaceWordDialog(private val targetDir: PsiDirectory) : DialogWrapper(tru
             row { regexCheckBox = checkBox("Use regular expression").bindSelected(::regexCheck) }
             row("Search word") {
                 textField().bindText(::searchWord).focused().validationOnApply {
-                    if (it.text.isEmpty())
-                        error("Specify the search word.")
+                    if (it.text.isEmpty()) error(EMPTY_ERROR_MSG)
                     else if (
                         refactorCheckBox.selected.invoke()
                         && ((if (regexCheckBox.selected.invoke()) """\.""" else ".") in it.text)
                     ) {
-                        error(errorMsg)
-                    } else
-                        null
+                        error(DOT_ERROR_MSG)
+                    } else null
                 }
             }
             row("Replace word") {
                 textField().bindText(::replaceWord).validationOnApply {
-                    if (refactorCheckBox.selected.invoke() && ("." in it.text)) error(errorMsg)
+                    if (refactorCheckBox.selected.invoke() && ("." in it.text)) error(DOT_ERROR_MSG)
                     else null
                 }
             }
@@ -52,4 +49,9 @@ class ReplaceWordDialog(private val targetDir: PsiDirectory) : DialogWrapper(tru
     fun showInputReplaceWordsDialog(): ReplaceInfo? =
         if (showAndGet()) ReplaceInfo(searchWord, replaceWord, refactorCheck, regexCheck)
         else null
+
+    companion object {
+        const val EMPTY_ERROR_MSG = "Specify the search word."
+        const val DOT_ERROR_MSG = "Can't use dot character for rename refactor."
+    }
 }

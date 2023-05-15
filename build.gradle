@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.k.pmpstudy'
-version '1.0.9'
+version '1.0.10'
 
 repositories {
     mavenCentral()
@@ -19,12 +19,12 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version = '2022.3'
+    version = '2023.1'
     plugins = ['com.intellij.java']
 }
 patchPluginXml {
     sinceBuild = '222'
-    untilBuild = '223.*'
+    untilBuild = '231.*'
 }
 test {
     useJUnitPlatform()
