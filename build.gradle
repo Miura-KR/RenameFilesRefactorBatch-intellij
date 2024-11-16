@@ -1,11 +1,11 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.9.20-Beta2'
-    id 'org.jetbrains.intellij' version '1.15.0'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.0-Beta1'
+    id 'org.jetbrains.intellij' version '1.17.4'
     id 'java'
 }
 
 group 'com.k.pmpstudy'
-version '1.0.12'
+version '1.0.13'
 
 repositories {
     mavenCentral()
@@ -19,12 +19,12 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version = '2023.3'
+    version = '2024.2'
     plugins = ['com.intellij.java']
 }
 patchPluginXml {
-    sinceBuild = '222'
-    untilBuild = '233.*'
+    sinceBuild = '223'
+    untilBuild = '242.*'
 }
 test {
     useJUnitPlatform()
