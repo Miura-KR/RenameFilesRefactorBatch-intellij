@@ -1,11 +1,11 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '2.3.10'
-    id "org.jetbrains.intellij.platform" version "2.11.0"
+    id 'org.jetbrains.kotlin.jvm' version '2.3.20'
+    id "org.jetbrains.intellij.platform" version "2.13.1"
     id 'java'
 }
 
 group 'com.k.pmpstudy'
-version '1.0.17'
+version '1.0.18'
 
 repositories {
     mavenCentral()
@@ -19,17 +19,16 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     intellijPlatform {
-        intellijIdea "2025.3.2"
+        intellijIdea "2026.1"
         bundledPlugin "com.intellij.java"
         pluginVerifier()
         zipSigner()
-        instrumentationTools()
     }
 }
 
 patchPluginXml {
     sinceBuild = '223'
-    untilBuild = '253.*'
+    untilBuild = '261.*'
 }
 test {
     useJUnitPlatform()
