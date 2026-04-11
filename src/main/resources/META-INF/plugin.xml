@@ -50,7 +50,8 @@ Javaのソースファイルで動作確認済みです。
     ]]></description>
 
     <change-notes><![CDATA[
-    Update until version to 261 idea.
+    Fixed so that all renames from a single Bulk Rename action can be undone together with one Ctrl+Z.<br>
+    一括リネームで変更した全ファイルを、Ctrl+Z 1回でまとめて元に戻せるように修正。
     ]]>
     </change-notes>
 

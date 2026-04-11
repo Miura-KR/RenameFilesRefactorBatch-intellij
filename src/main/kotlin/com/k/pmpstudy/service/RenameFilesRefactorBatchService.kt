@@ -1,5 +1,7 @@
 package com.k.pmpstudy.service
 
+import com.intellij.openapi.command.CommandProcessor
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.psi.*
@@ -9,9 +11,6 @@ import com.k.pmpstudy.dialog.RenameConfirmDialog
 import com.k.pmpstudy.dialog.ReplaceWordDialog
 import com.k.pmpstudy.domain.ReplaceInfo
 import java.io.IOException
-import java.nio.file.FileAlreadyExistsException
-import java.nio.file.Files
-import java.nio.file.Path
 
 class RenameFilesRefactorBatchService(private val project: Project) {
     fun run(dir: PsiElement) {
@@ -38,26 +37,41 @@ class RenameFilesRefactorBatchService(private val project: Project) {
         }
 
         if (replaceInfo.useRefactor) {
-            // リネーム実行
+            // リネーム実行（1回のUndoで全件を元に戻せるよう、単一のコマンドにまとめる）
             val refactoringFactory = RefactoringFactory.getInstance(project)
-            targetFiles.forEach { renameFileRefactor(refactoringFactory, it, replaceInfo) }
+            CommandProcessor.getInstance().executeCommand(
+                project,
+                { targetFiles.forEach { renameFileRefactor(refactoringFactory, it, replaceInfo) } },
+                "Bulk Rename",
+                null
+            )
             return
         }
 
-        targetFiles.forEach {
-            val srcFilePath = Path.of(it.virtualFile.path)
-            val newFileName = getNewName(replaceInfo, it.name)
-            try {
-                Files.move(srcFilePath, srcFilePath.parent.resolve(newFileName))
-            } catch (e: FileAlreadyExistsException) {
-                Messages.showMessageDialog(
-                    "$newFileName is already exist.", "Rename Error", Messages.getInformationIcon()
-                )
-            } catch (e: IOException) {
-                Messages.showMessageDialog(
-                    "Rename ${it.name} to $newFileName.", "Rename Error", Messages.getInformationIcon()
-                )
+        // リネーム実行（1回のUndoで全件を元に戻せるよう、単一の書き込みコマンドにまとめる）
+        val errorMessages = mutableListOf<String>()
+        WriteCommandAction.runWriteCommandAction(
+            project,
+            "Bulk Rename",
+            null,
+            {
+                targetFiles.forEach {
+                    val vFile = it.virtualFile
+                    val newFileName = getNewName(replaceInfo, it.name)
+                    if (vFile.parent?.findChild(newFileName) != null) {
+                        errorMessages += "$newFileName is already exist."
+                        return@forEach
+                    }
+                    try {
+                        vFile.rename(this, newFileName)
+                    } catch (e: IOException) {
+                        errorMessages += "Rename ${it.name} to $newFileName."
+                    }
+                }
             }
+        )
+        errorMessages.forEach {
+            Messages.showMessageDialog(it, "Rename Error", Messages.getInformationIcon())
         }
     }
 
