@@ -28,7 +28,6 @@ dependencies {
 
 patchPluginXml {
     sinceBuild = '223'
-    untilBuild = '261.*'
 }
 test {
     useJUnitPlatform()
